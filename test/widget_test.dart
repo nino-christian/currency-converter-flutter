@@ -6,24 +6,41 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:currency_converter_flutterr/main.dart';
-import 'package:flutter/material.dart';
+import 'package:currency_converter_flutterr/src/feature/converter/bloc/currency_bloc.dart';
+import 'package:currency_converter_flutterr/src/feature/converter/widget/app_textformfield.dart';
+import 'package:currency_converter_flutterr/src/feature/converter/widget/converter_form_row.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockCurrencyBloc extends Mock implements CurrencyBloc {}
 
 void main() {
-  testWidgets('Test text form fields', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Verify that the two text form fields are present',
+      (WidgetTester tester) async {
+    // Arrange
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Act
+    final converterFormRowFinder = find.byType(ConverterFormRow);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Assert
+    expect(converterFormRowFinder, findsNWidgets(2));
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Verify that the two text fields are present',
+      (WidgetTester tester) async {
+    // Arrange
+    await tester.pumpWidget(const MyApp());
+    // Act
+    final parentFinder = find.byType(ConverterFormRow);
+    // Assert
+    expect(parentFinder, findsNWidgets(2));
+
+    // Act
+    final textFieldFinder = find.descendant(
+        of: parentFinder, matching: find.byType(AppTextFormField));
+
+    // Assert
+    expect(textFieldFinder, findsNWidgets(2));
   });
 }
